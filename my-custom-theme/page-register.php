@@ -79,7 +79,7 @@ mytheme_breadcrumbs(); // хлебные крошки
         <button type="submit" name="register_submit" class="btn-contact">Зарегистрироваться</button>
       </form>
       <p class="auth-switch">
-        Есть аккаунт? <a href="<?php echo home_url('/login/'); ?>">Войти</a>
+        Есть аккаунт? <a href="<?php echo home_url('/user_login/'); ?>">Войти</a>
       </p>
     </div>
   </div>
