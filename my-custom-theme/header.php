@@ -1,7 +1,12 @@
-<!DOCTYPE html>
+<?php
+/**
+ * Header template
+ * @package my-custom-theme
+ */
+?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
-  <meta charset="<?php bloginfo('charset'); ?>">
+  <meta charset="<?php bloginfo( 'charset' ); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php wp_head(); ?>
 </head>
@@ -10,49 +15,43 @@
 <header class="site-header">
   <div class="header-inner container">
 
-    <!-- Бургер‑кнопка -->
-    <button class="burger-products">
-      <span class="line"></span>
-      <span class="line"></span>
-      <span class="line"></span>
+    <!-- Бургер‑меню «Products» -->
+    <button class="burger-products" aria-label="Product menu">
+      <span class="line"></span><span class="line"></span><span class="line"></span>
       <span class="btn-text">Products</span>
     </button>
 
     <!-- Логотип -->
     <div class="logo">
-      <a href="<?php echo home_url(); ?>">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Touring Expert">
+      <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Touring Expert">
       </a>
     </div>
 
-    <!-- Главное меню -->
-    <nav class="main-nav">
+    <!-- Главное меню (при желании замените на wp_nav_menu) -->
+    <nav class="main-nav" aria-label="Основное меню">
       <a href="#">Оборудование</a>
       <a href="#">Инсталляции</a>
       <a href="#">Новости</a>
       <a href="#">Вопросы</a>
       <a href="#">Контакты</a>
-      <a href="#">О нас</a>
+      <a href="#">О нас</a>
     </nav>
 
-    <!-- Иконки: корзина и аккаунт/выход -->
+    <!-- Иконки корзины и аккаунта -->
     <div class="header-icons">
-      <!-- Корзина оставляем без изменений -->
-      <a href="<?php echo wc_get_cart_url(); ?>" class="cart-link">
+      <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-link" title="Корзина">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/cart.png" alt="Cart">
       </a>
 
-      <!-- Аккаунт: если вошёл, — выход, иначе — форма входа -->
-      <?php if ( is_user_logged_in() ) : ?>
-        <a href="<?php echo wp_logout_url( home_url() ); ?>" class="account-link" title="Выйти">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logout.png" alt="Logout">
-        </a>
-      <?php else : ?>
-        <a href="<?php echo home_url('/user_login/'); ?>" class="account-link" title="Войти">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png" alt="Account">
-        </a>
-      <?php endif; ?>
+      <?php
+        // если залогинен – ведём в /account/, иначе – на /user_login/
+        $account_url = is_user_logged_in() ? home_url( '/account/' ) : home_url( '/user_login/' );
+      ?>
+      <a href="<?php echo esc_url( $account_url ); ?>" class="account-link" title="Аккаунт">
+        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png" alt="Account">
+      </a>
     </div>
 
-  </div>
+  </div><!-- .header-inner -->
 </header>
