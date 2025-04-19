@@ -1,93 +1,107 @@
 <?php
 /**
  * Template Name: Account Page
- * Description: Личный кабинет пользователя (sidebar + статистика + объявления)
+ * Пользовательский личный кабинет
+ * @package my-custom-theme
  */
 
-get_header();
-
-// Если не авторизован — перенаправляем на страницу логина
 if ( ! is_user_logged_in() ) {
-    wp_redirect( home_url( '/user-login/' ) );
-    exit;
+  wp_safe_redirect( home_url( '/user_login/' ) );
+  exit;
 }
 
-// Данные текущего пользователя
-$current_id   = get_current_user_id();
+get_header();
+mytheme_breadcrumbs();
+
+/* --------------------------------------------------
+ *  Данные пользователя
+ * -------------------------------------------------- */
 $current_user = wp_get_current_user();
-
-// Хлебные крошки (если есть функция)
-if ( function_exists( 'mytheme_breadcrumbs' ) ) {
-    mytheme_breadcrumbs();
-}
+$section      = isset( $_GET['section'] ) ? sanitize_key( $_GET['section'] ) : 'dashboard';
 ?>
 
-<div class="page-wrapper">
-  <main class="site-main">
+<div class="page-wrapper account-wrapper">
 
-    <div class="account-layout"><!-- FLEX-контейнер -->
+  <!-- ==== Боковая панель ================================================= -->
+  <aside class="account-sidebar">
+    <div class="account-profile">
+      <?php echo get_avatar( $current_user->ID, 64, '', '', array( 'class' => 'avatar' ) ); ?>
+      <div class="account-name"><?php echo esc_html( $current_user->display_name ?: $current_user->user_login ); ?></div>
+      <div class="account-mail"><?php echo esc_html( $current_user->user_email ); ?></div>
+    </div>
 
-      <!-- SIDEBAR -->
-      <aside class="account-sidebar">
-        <div class="user-card">
-          <div class="avatar">
-            <?php echo get_avatar( $current_id, 80 ); ?>
-          </div>
-          <p class="user-name"><?php echo esc_html( $current_user->display_name ); ?></p>
-          <p class="user-email"><?php echo esc_html( $current_user->user_email ); ?></p>
-        </div>
-
-        <ul class="nav">
-          <li class="is-active"><span class="ico">🏠</span>Обзор</li>
-          <li><span class="ico">📄</span>Мои объявления</li>
-          <li><span class="ico">❤️</span>Избранное</li>
-          <li><span class="ico">⚙️</span>Настройки</li>
-          <li>
-            <span class="ico">🚪</span>
-            <a href="<?php echo wp_logout_url( home_url() ); ?>">Выход</a>
+    <?php
+    // массив пунктов меню: slug → [иконка, подпись]
+    $menu = array(
+      'dashboard'       => array( 'dashboard.svg',      'Основная информация' ),
+      'personal'        => array( 'user.svg',           'Личная информация'   ),
+      'billing'         => array( 'billing.svg',        'Платежные реквизиты' ),
+      'cart'            => array( 'cart.svg',           'Корзина'             ),
+      'orders'          => array( 'orders.svg',         'Заказы'              ),
+      'favourites'      => array( 'heart.svg',          'Избранное'           ),
+      'listing-create'  => array( 'add.svg',            'Создать объявление'  ),
+      'listing-my'      => array( 'list.svg',           'Мои объявления'      ),
+      'stats'           => array( 'stats.svg',          'Статистика'          ),
+    );
+    ?>
+    <nav class="account-menu" aria-label="Меню аккаунта">
+      <ul>
+        <?php foreach ( $menu as $slug => $item ) : ?>
+          <li class="<?php echo $slug === $section ? 'is-active' : ''; ?>">
+            <a href="<?php echo esc_url( add_query_arg( 'section', $slug, get_permalink() ) ); ?>">
+              <img src="<?php echo get_template_directory_uri(); ?>/assets/icons/<?php echo esc_attr( $item[0] ); ?>" alt="">
+              <?php echo esc_html( $item[1] ); ?>
+            </a>
           </li>
-        </ul>
-      </aside>
+        <?php endforeach; ?>
 
-      <!-- CONTENT -->
-      <div class="account-content">
+        <!-- Выход -->
+        <li class="logout">
+          <a href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>">
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/icons/logout.svg" alt="">
+            Выйти из аккаунта
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
 
-        <!-- СТАТИСТИКА -->
-        <div class="account-stats">
-          <?php
-            $stats = te_get_user_stats( $current_id );
-          ?>
-          <div class="stat">
-            <p class="stat-label">Объявления</p>
-            <p class="stat-num"><?php echo intval( $stats['listings'] ); ?></p>
-          </div>
-          <div class="stat">
-            <p class="stat-label">Избранное</p>
-            <p class="stat-num"><?php echo intval( $stats['favourites'] ); ?></p>
-          </div>
-          <div class="stat">
-            <p class="stat-label">Заказы</p>
-            <p class="stat-num"><?php echo intval( $stats['orders'] ); ?></p>
-          </div>
+  <!-- ==== Контентная область ============================================ -->
+  <main class="account-content">
+
+    <?php if ( $section === 'dashboard' ) : ?>
+
+      <!-- --- Секция «Основное» --- -->
+      <h2>Основное</h2>
+      <div class="dash-cards">
+        <a class="dash-card" href="#"><span class="number">4</span> <span class="label">Заказы</span></a>
+        <a class="dash-card" href="#"><span class="number">3</span> <span class="label">Избранное</span></a>
+        <a class="dash-card" href="#"><span class="number">1</span> <span class="label">Объявления</span></a>
+        <a class="dash-card" href="#"><span class="number">—</span> <span class="label">Личные данные</span></a>
+        <a class="dash-card" href="#"><span class="number">—</span> <span class="label">Платежные реквизиты</span></a>
+      </div>
+
+      <!-- --- Секция «Подписки» --- -->
+      <h2>Подписки</h2>
+      <div class="subs-cards">
+        <div class="subs-card">
+          <p>Подписка на&nbsp;новости по&nbsp;email</p>
+          <button class="btn">Подписаться</button>
         </div>
-
-        <!-- МОИ ОБЪЯВЛЕНИЯ -->
-        <h3 class="block-title">Мои объявления</h3>
-        <div class="account-listings">
-          <?php te_render_user_listings( $current_id ); ?>
+        <div class="subs-card">
+          <p>Подписка на&nbsp;новости в&nbsp;telegram</p>
+          <button class="btn">Отписаться</button>
         </div>
+      </div>
 
-        <!-- ПОДПИСКИ -->
-        <div class="account-subscriptions">
-          <button class="btn-accent">Продлить подписку</button>
-          <button class="btn-outline">Отказаться</button>
-        </div>
+    <?php else : ?>
 
-      </div><!-- /.account-content -->
+      <p>Страница <strong><?php echo esc_html( $section ); ?></strong> ещё в&nbsp;разработке…</p>
 
-    </div><!-- /.account-layout -->
+    <?php endif; ?>
 
   </main>
-</div><!-- /.page-wrapper -->
+
+</div><!-- .page-wrapper -->
 
 <?php get_footer(); ?>
