@@ -8,10 +8,10 @@ get_header();
 
 // Хлебные крошки (если не на главной)
 if ( function_exists('mytheme_breadcrumbs') ) {
-    mytheme_breadcrumbs();
+  mytheme_breadcrumbs();
 }
+?>
 
-?> 
 <div class="page-wrapper"><!-- центральный белый контейнер -->
   <main class="site-main">
 
@@ -72,34 +72,46 @@ if ( function_exists('mytheme_breadcrumbs') ) {
       </div>
     </section>
 
-    <!-- ==== Секция «Остались вопросы?» ==== -->
-<section class="questions">
-  <div class="questions-inner">
-    <div class="questions-text">
-      <h2>Остались вопросы?</h2>
-      <p>Заполните форму обратной связи с интересующими вас вопросами и мы свяжемся с вами удобным для вас способом</p>
-    </div>
-    <div class="questions-action">
-      <a href="#contact" class="btn-contact">Напишите нам</a>
-    </div>
-  </div>
-</section>
+    <!-- Секция "Остались вопросы" -->
+    <section class="questions">
+      <div class="questions-inner">
+        <div class="questions-text">
+          <h2>Остались вопросы?</h2>
+          <p>Свяжитесь с нами, и мы ответим на все ваши вопросы.</p>
+        </div>
+        <div class="questions-action">
+          <a href="#contact" class="btn-contact">Напишите нам</a>
+        </div>
+      </div>
+    </section>
 
     <!-- PRODUCT BRAND -->
     <section class="brands-carousel">
       <div class="container">
         <h2>PRODUCT BRAND</h2>
         <div class="carousel-container">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/brand1.png" alt="Brand1">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/brand2.png" alt="Brand2">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/brand3.png" alt="Brand3">
-          <!-- и так далее — подхватит любое количество картинок -->
+          <?php
+          // Динамически выводим все логотипы из папки /assets/images/brands/
+          $brand_dir = get_template_directory() . '/assets/images/brands';
+          $images = glob( $brand_dir . '/*.{png,jpg,jpeg,svg}', GLOB_BRACE );
+          if ( $images ) {
+            foreach ( $images as $img_path ) {
+              $filename = basename( $img_path );
+              $img_url  = get_template_directory_uri() . '/assets/images/brands/' . $filename;
+              $alt      = pathinfo( $filename, PATHINFO_FILENAME );
+              echo '<div class="brand-item">';
+              echo '  <img src="' . esc_url( $img_url ) . '" alt="' . esc_attr( $alt ) . '">';
+              echo '</div>';
+            }
+          } else {
+            echo '<p>Логотипы брендов отсутствуют.</p>';
+          }
+          ?>
         </div>
       </div>
     </section>
 
-  </main><!-- .site-main -->
+  </main>
 </div><!-- .page-wrapper -->
 
-<?php
-get_footer();
+<?php get_footer(); ?>

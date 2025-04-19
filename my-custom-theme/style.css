@@ -7,7 +7,9 @@
  Text Domain: my-custom-theme
 */
 
-/* 1. Сброс и базовые стили */
+/* =====================================
+   1. СБРОС И БАЗОВЫЕ СТИЛИ
+======================================== */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -20,14 +22,15 @@ body {
   line-height: 1.5;
 }
 
-/* 2. Контейнеры */
+/* =====================================
+   2. КОНТЕЙНЕРЫ
+======================================== */
 .page-wrapper {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
   background: #fff;
 }
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -35,7 +38,9 @@ body {
   background: transparent;
 }
 
-/* 3. Хлебные крошки */
+/* =====================================
+   3. ХЛЕБНЫЕ КРОШКИ
+======================================== */
 .breadcrumbs {
   padding: 12px 15px;
   font-size: 14px;
@@ -50,7 +55,9 @@ body {
   text-decoration: underline;
 }
 
-/* 4. Шапка */
+/* =====================================
+   4. ШАПКА (header)
+======================================== */
 .site-header {
   background: #fff;
   border-bottom: 1px solid #ccc;
@@ -59,6 +66,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 10px 15px;
 }
 .burger-products {
@@ -69,6 +78,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 5px;
 }
 .burger-products .line {
   width: 30px;
@@ -105,7 +115,9 @@ body {
   object-fit: contain;
 }
 
-/* 5. Hero-секция */
+/* =====================================
+   5. Hero-секция
+======================================== */
 .hero {
   display: flex;
   flex-wrap: wrap;
@@ -137,7 +149,9 @@ body {
   margin: 0 auto;
 }
 
-/* 6. Карусельные секции */
+/* =====================================
+   6. Карусельные секции (Hot Deals, New In, Most Viewed)
+======================================== */
 .carousel-section {
   background: #fff;
   padding: 40px 0;
@@ -161,12 +175,13 @@ body {
   text-align: center;
 }
 
-/* 7. Секция «Остались вопросы?» (две колонки) */
+/* =====================================
+   7. Секция «Остались вопросы?» (две колонки)
+======================================== */
 .questions {
   background: #21403C;
   padding: 60px 0;
 }
-
 .questions-inner {
   display: flex;
   flex-wrap: wrap;
@@ -176,27 +191,22 @@ body {
   margin: 0 auto;
   padding: 0 15px;
 }
-
 .questions-text {
   flex: 1 1 60%;
   color: #fff;
 }
-
 .questions-text h2 {
   font-size: 32px;
   margin-bottom: 16px;
 }
-
 .questions-text p {
   font-size: 18px;
   line-height: 1.4;
 }
-
 .questions-action {
   flex: 1 1 30%;
   text-align: right;
 }
-
 .questions-action .btn-contact {
   display: inline-block;
   background: #fff;
@@ -207,11 +217,13 @@ body {
   text-decoration: none;
   transition: background 0.3s;
 }
-
 .questions-action .btn-contact:hover {
   background: #e0e0e0;
 }
-/* 8. Carousel брендов (динамический) */
+
+/* =====================================
+   8. Carousel брендов
+======================================== */
 .brands-carousel {
   background: #fff;
   padding: 40px 0;
@@ -228,18 +240,24 @@ body {
   gap: 30px;
   padding: 0 15px;
 }
-.brands-carousel .carousel-container img {
+.brands-carousel .carousel-container .brand-item {
+  flex: 0 1 auto;
+}
+.brands-carousel .carousel-container .brand-item img {
   max-height: 80px;
   width: auto;
   object-fit: contain;
+  display: block;
 }
 
-/* 9. Формы регистрации и входа */
+/* =====================================
+   9. Формы регистрации и входа
+======================================== */
 .auth-container {
   display: flex;
+  flex-wrap: wrap;
   gap: 40px;
   padding: 60px 20px;
-  flex-wrap: wrap;
 }
 .auth-image img {
   width: 100%;
@@ -301,7 +319,9 @@ body {
   font-weight: 500;
 }
 
-/* 10. Футер */
+/* =====================================
+   10. Футер
+======================================== */
 .site-footer {
   background: #21403C;
   color: #fff;
@@ -380,7 +400,9 @@ body {
   font-size: 14px;
 }
 
-/* 11. Адаптивные правки */
+/* =====================================
+   11. АДАПТИВНЫЕ ПРАВКИ
+======================================== */
 @media (max-width: 768px) {
   .header-inner {
     flex-wrap: wrap;

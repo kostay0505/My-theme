@@ -1,94 +1,93 @@
 <?php
 /**
  * Template Name: Account Page
+ * Description: Личный кабинет пользователя (sidebar + статистика + объявления)
  */
+
 get_header();
 
-// Если не залогинен — на страницу входа
+// Если не авторизован — перенаправляем на страницу логина
 if ( ! is_user_logged_in() ) {
-  wp_redirect( home_url('/login/') );
-  exit;
+    wp_redirect( home_url( '/user-login/' ) );
+    exit;
 }
 
+// Данные текущего пользователя
+$current_id   = get_current_user_id();
 $current_user = wp_get_current_user();
-mytheme_breadcrumbs();
+
+// Хлебные крошки (если есть функция)
+if ( function_exists( 'mytheme_breadcrumbs' ) ) {
+    mytheme_breadcrumbs();
+}
 ?>
 
-<div class="page-wrapper account-container container">
+<div class="page-wrapper">
+  <main class="site-main">
 
-  <!-- Левая колонка -->
-  <aside class="account-sidebar">
-    <div class="avatar">
-      <img src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png" alt="Avatar">
-    </div>
-    <div class="user-info">
-      <p class="user-name">
-        <?php echo esc_html( $current_user->first_name . ' ' . $current_user->last_name ); ?>
-      </p>
-      <p class="user-email">
-        <?php echo esc_html( $current_user->user_email ); ?>
-      </p>
-    </div>
-    <nav class="account-nav">
-      <ul>
-        <li><a href="#"><span class="dashicons dashicons-admin-users"></span> Основная информация</a></li>
-        <li><a href="#"><span class="dashicons dashicons-admin-site-alt3"></span> Личная информация</a></li>
-        <li><a href="#"><span class="dashicons dashicons-format-status"></span> Платёжные реквизиты</a></li>
-        <li><a href="#"><span class="dashicons dashicons-cart"></span> Корзина</a></li>
-        <li><a href="#"><span class="dashicons dashicons-list-view"></span> Заказы</a></li>
-        <li><a href="#"><span class="dashicons dashicons-heart"></span> Избранное</a></li>
-        <li><a href="#"><span class="dashicons dashicons-plus-alt2"></span> Создать объявление</a></li>
-        <li><a href="#"><span class="dashicons dashicons-media-document"></span> Мои объявления</a></li>
-        <li><a href="#"><span class="dashicons dashicons-chart-bar"></span> Статистика</a></li>
-        <li><a href="<?php echo wp_logout_url( home_url() ); ?>">
-            <span class="dashicons dashicons-dismiss"></span> Выйти из аккаунта
-        </a></li>
-      </ul>
-    </nav>
-  </aside>
+    <div class="account-layout"><!-- FLEX-контейнер -->
 
-  <!-- Правая рабочая зона -->
-  <main class="account-main">
-    <section class="account-hero">
-      <h2>Основное</h2>
-      <div class="account-cards">
-        <div class="card">
-          <p class="card-title">Заказы</p>
-          <p class="card-number">4</p>
+      <!-- SIDEBAR -->
+      <aside class="account-sidebar">
+        <div class="user-card">
+          <div class="avatar">
+            <?php echo get_avatar( $current_id, 80 ); ?>
+          </div>
+          <p class="user-name"><?php echo esc_html( $current_user->display_name ); ?></p>
+          <p class="user-email"><?php echo esc_html( $current_user->user_email ); ?></p>
         </div>
-        <div class="card">
-          <p class="card-title">Добавлено в избранное</p>
-          <p class="card-number">3</p>
-        </div>
-        <div class="card">
-          <p class="card-title">Объявления</p>
-          <p class="card-number">1</p>
-        </div>
-        <div class="card">
-          <p class="card-title">Личные данные</p>
-          <a href="#">Заполните личные данные</a>
-        </div>
-        <div class="card">
-          <p class="card-title">Платёжные реквизиты</p>
-          <a href="#">Добавьте реквизиты</a>
-        </div>
-      </div>
-    </section>
 
-    <section class="account-subscriptions">
-      <h2>Подписки</h2>
-      <div class="subs-cards">
-        <div class="sub-card">
-          <p>Подписка на новости по email</p>
-          <button>Подписаться</button>
+        <ul class="nav">
+          <li class="is-active"><span class="ico">🏠</span>Обзор</li>
+          <li><span class="ico">📄</span>Мои объявления</li>
+          <li><span class="ico">❤️</span>Избранное</li>
+          <li><span class="ico">⚙️</span>Настройки</li>
+          <li>
+            <span class="ico">🚪</span>
+            <a href="<?php echo wp_logout_url( home_url() ); ?>">Выход</a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- CONTENT -->
+      <div class="account-content">
+
+        <!-- СТАТИСТИКА -->
+        <div class="account-stats">
+          <?php
+            $stats = te_get_user_stats( $current_id );
+          ?>
+          <div class="stat">
+            <p class="stat-label">Объявления</p>
+            <p class="stat-num"><?php echo intval( $stats['listings'] ); ?></p>
+          </div>
+          <div class="stat">
+            <p class="stat-label">Избранное</p>
+            <p class="stat-num"><?php echo intval( $stats['favourites'] ); ?></p>
+          </div>
+          <div class="stat">
+            <p class="stat-label">Заказы</p>
+            <p class="stat-num"><?php echo intval( $stats['orders'] ); ?></p>
+          </div>
         </div>
-        <div class="sub-card">
-          <p>Подписка на новости в Telegram</p>
-          <button>Отписаться</button>
+
+        <!-- МОИ ОБЪЯВЛЕНИЯ -->
+        <h3 class="block-title">Мои объявления</h3>
+        <div class="account-listings">
+          <?php te_render_user_listings( $current_id ); ?>
         </div>
-      </div>
-    </section>
+
+        <!-- ПОДПИСКИ -->
+        <div class="account-subscriptions">
+          <button class="btn-accent">Продлить подписку</button>
+          <button class="btn-outline">Отказаться</button>
+        </div>
+
+      </div><!-- /.account-content -->
+
+    </div><!-- /.account-layout -->
+
   </main>
-</div>
+</div><!-- /.page-wrapper -->
 
 <?php get_footer(); ?>

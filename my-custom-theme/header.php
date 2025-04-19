@@ -35,14 +35,23 @@
       <a href="#">О нас</a>
     </nav>
 
-    <!-- Иконки: корзина и аккаунт -->
+    <!-- Иконки: корзина и аккаунт/выход -->
     <div class="header-icons">
+      <!-- Корзина оставляем без изменений -->
       <a href="<?php echo wc_get_cart_url(); ?>" class="cart-link">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/cart.png" alt="Cart">
       </a>
-      <a href="<?php echo home_url('/register/'); ?>" class="account-link">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png" alt="Account">
-      </a>
+
+      <!-- Аккаунт: если вошёл, — выход, иначе — форма входа -->
+      <?php if ( is_user_logged_in() ) : ?>
+        <a href="<?php echo wp_logout_url( home_url() ); ?>" class="account-link" title="Выйти">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logout.png" alt="Logout">
+        </a>
+      <?php else : ?>
+        <a href="<?php echo home_url('/user_login/'); ?>" class="account-link" title="Войти">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png" alt="Account">
+        </a>
+      <?php endif; ?>
     </div>
 
   </div>
