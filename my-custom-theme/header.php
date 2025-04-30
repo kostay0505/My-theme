@@ -10,55 +10,57 @@
 <header class="site-header">
   <div class="header-inner container">
 
-    <!-- Бургер-кнопка: ведёт на /products/ -->
-    <a href="<?php echo esc_url( home_url('/products/') ); ?>" class="burger-products" title="Products">
+    <!-- Бургер-кнопка (ведёт на каталог Оборудование) -->
+    <button class="burger-products" onclick="location.href='<?php echo esc_url( home_url('/products/') ); ?>';">
       <span class="line"></span>
       <span class="line"></span>
       <span class="line"></span>
-      <span class="btn-text">Products</span>
-    </a>
+      <span class="btn-text">Оборудование</span>
+    </button>
 
-    <!-- Логотип -->
+    <!-- Логотип по центру -->
     <div class="logo">
       <a href="<?php echo esc_url( home_url() ); ?>">
-        <img
-          src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png"
-          alt="<?php bloginfo('name'); ?>"
+        <img 
+          src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" 
+          alt="<?php echo esc_attr( get_bloginfo('name') ); ?>"
         >
       </a>
     </div>
 
-    <!-- Основное меню (статичные ссылки) -->
+    <!-- Главное меню, выровнено справа от логотипа -->
     <nav class="main-nav">
-      <a href="<?php echo esc_url( home_url('/equipment/') ); ?>">Оборудование</a>
       <a href="<?php echo esc_url( home_url('/installations/') ); ?>">Инсталляции</a>
       <a href="<?php echo esc_url( home_url('/news/') ); ?>">Новости</a>
-      <a href="<?php echo esc_url( home_url('/questions/') ); ?>">Вопросы</a>
+      <a href="<?php echo esc_url( home_url('/faq/') ); ?>">Вопросы</a>
       <a href="<?php echo esc_url( home_url('/contacts/') ); ?>">Контакты</a>
       <a href="<?php echo esc_url( home_url('/about/') ); ?>">О нас</a>
     </nav>
 
-    <!-- Иконки: корзина и аккаунт -->
+    <!-- Иконки корзины и аккаунта -->
     <div class="header-icons">
       <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-link" title="Корзина">
-        <img
-          src="<?php echo get_template_directory_uri(); ?>/assets/images/cart.png"
+        <img 
+          src="<?php echo get_template_directory_uri(); ?>/assets/images/cart.png" 
           alt="Cart"
         >
       </a>
-      <a
-        href="<?php echo is_user_logged_in()
-          ? esc_url( home_url('/account/') )
-          : esc_url( home_url('/user_login/') );
-        ?>"
-        class="account-link"
-        title="<?php echo is_user_logged_in() ? 'Мой аккаунт' : 'Войти'; ?>"
-      >
-        <img
-          src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png"
-          alt="Account"
-        >
-      </a>
+
+      <?php if ( is_user_logged_in() ) : ?>
+        <a href="<?php echo esc_url( home_url('/account/') ); ?>" class="account-link" title="Мой аккаунт">
+          <img 
+            src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png" 
+            alt="Account"
+          >
+        </a>
+      <?php else : ?>
+        <a href="<?php echo esc_url( home_url('/user_login/') ); ?>" class="account-link" title="Войти">
+          <img 
+            src="<?php echo get_template_directory_uri(); ?>/assets/images/account.png" 
+            alt="Login"
+          >
+        </a>
+      <?php endif; ?>
     </div>
 
   </div>

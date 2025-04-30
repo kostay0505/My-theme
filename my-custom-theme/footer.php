@@ -8,12 +8,13 @@
       <!-- Колонка: меню ссылок -->
       <div class="footer-column footer-links">
         <ul>
-          <li><a href="#">Оборудование</a></li>
-          <li><a href="#">Инсталляции</a></li>
-          <li><a href="#">Новости</a></li>
-          <li><a href="#">Вопросы</a></li>
-          <li><a href="#">Контакты</a></li>
-          <li><a href="#">О нас</a></li>
+          <!-- “Оборудование” ведёт на ту же страницу /products/, что и бургер в хедере -->
+          <li><a href="<?php echo esc_url( home_url('/products/') ); ?>">Оборудование</a></li>
+          <li><a href="<?php echo esc_url( home_url('/installations/') ); ?>">Инсталляции</a></li>
+          <li><a href="<?php echo esc_url( home_url('/news/') ); ?>">Новости</a></li>
+          <li><a href="<?php echo esc_url( home_url('/questions/') ); ?>">Вопросы</a></li>
+          <li><a href="<?php echo esc_url( home_url('/contacts/') ); ?>">Контакты</a></li>
+          <li><a href="<?php echo esc_url( home_url('/about-us/') ); ?>">О нас</a></li>
         </ul>
       </div>
 
@@ -33,7 +34,7 @@
       <!-- Колонка: подписка -->
       <div class="footer-column footer-subscribe">
         <h3>Подписка на рассылку</h3>
-        <p>Будьте в курсе горячих предложений и новостей</p>
+        <p>Будьте в курсе последних новостей и акций</p>
         <form action="#" method="post">
           <input 
             type="email" 
@@ -49,7 +50,6 @@
     <div class="footer-bottom">
       <p>&copy; <?php echo date('Y'); ?> My Custom Theme</p>
     </div>
-
   </div>
 </footer>
 
