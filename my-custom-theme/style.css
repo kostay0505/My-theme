@@ -453,4 +453,152 @@ img{max-width:100%;height:auto;display:block}
   max-width: 120px;
   height: auto;
 }
+/* Фильтр в списке товаров */
+.filter-box {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin: 20px 0;
+}
+.filter-box .filter-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.filter-box .filter-grid label {
+  flex: 0 1 calc(50% - 10px);
+  display: flex;
+  flex-direction: column;
+}
+.filter-box input[type="text"],
+.filter-box select {
+  width: 100%;
+  max-width: none;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+.filter-box .filter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+.filter-box .filter-actions .filter-checkbox {
+  font-size: 14px;
+}
+.filter-box .filter-actions .button {
+  background: #0073aa;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.filter-box .filter-actions .button:hover {
+  background: #005177;
+}
 
+/* Сброс списка и отступов */
+ul.products-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Одиночная карточка товара */
+.subcategory-item {
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid #ddd;
+  padding: 16px 0;
+}
+
+/* Блок с миниатюрой */
+.item-thumbnail {
+  flex: 0 0 100px;
+  margin-right: 16px;
+}
+.item-thumbnail img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Блок с заголовком и описанием */
+.item-details {
+  flex: 1;
+}
+.item-title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.item-title a {
+  color: #0073aa;            /* ваш синий цвет */
+  text-decoration: none;
+  font-weight: 600;
+}
+.item-title a:hover {
+  text-decoration: underline;
+}
+.item-excerpt {
+  margin-top: 6px;
+  color: #444;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Блок с мета-данными (цена/дата/локация) */
+.item-meta {
+  flex: 0 0 100px;
+  margin-left: 16px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #333;
+}
+.item-meta .item-price {
+  font-weight: bold;
+  color: #000;
+}
+.item-meta .item-date,
+.item-meta .item-location {
+  font-size: 12px;
+  color: #777;
+}
+
+/* Переключатель кол-ва товаров внизу */
+.bottom-switcher {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-size: 14px;
+}
+.bottom-switcher span {
+  font-weight: 500;
+  color: #333;
+}
+.bottom-switcher a {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #0073aa;
+}
+.bottom-switcher a.active {
+  background: #0073aa;
+  color: #fff;
+  border-color: #005177;
+}
+.bottom-switcher a:hover {
+  background: #005177;
+  color: #fff;
+}
