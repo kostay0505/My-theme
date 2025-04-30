@@ -1,18 +1,19 @@
-/**
- *  theme.js
- *  ▸  анимация бургер‑кнопки
- *  ▸  (добавляйте свои скрипты здесь)
- */
-document.addEventListener('DOMContentLoaded', () => {
+// assets/js/theme.js
+// …существующий код…
 
-  /* ── burger toggle ───────────────── */
-  const burger = document.querySelector('.burger-products');
-  if (burger){
-    burger.addEventListener('click', () => {
-      burger.classList.toggle('is-open');
-      // здесь можно раскрывать мобильное off‑canvas меню,
-      // например: document.querySelector('.mobile-nav').classList.toggle('open');
+document.addEventListener('DOMContentLoaded', function(){
+  const mainImg = document.querySelector('.product-main-img');
+  const thumbs  = document.querySelectorAll('.product-thumb-img');
+
+  if ( mainImg && thumbs.length ) {
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', function(){
+        mainImg.src = this.dataset.full;
+        thumbs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
     });
   }
-
 });
+
+// …возможно, дальше ещё ваш код…
