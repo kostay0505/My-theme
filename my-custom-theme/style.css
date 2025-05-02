@@ -602,3 +602,128 @@ ul.products-list {
   background: #005177;
   color: #fff;
 }
+.bottom-switcher {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-size: 14px;
+}
+.bottom-switcher a {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #0073aa;
+}
+.bottom-switcher a.active {
+  background: #0073aa;
+  color: #fff;
+  border-color: #005177;
+}
+.bottom-switcher a:hover {
+  background: #005177;
+  color: #fff;
+}
+/* Поисковая строка в фильтре */
+.filter-search {
+  margin-bottom: 16px;
+  position: relative;
+}
+.filter-search label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.filter-search input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+.search-suggestions .suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+.search-suggestions .suggestion-item:hover {
+  background: #f0f0f0;
+}
+.carousel-section {
+  margin: 40px 0;
+}
+.carousel-section h2 {
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+.carousel-item {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.carousel-item h3 {
+  margin: 8px 0 4px;
+  font-size: 16px;
+}
+.carousel-item .price {
+  font-weight: 700;
+  color: #0073aa;
+}
+
+.questions {
+  background-color: #1f3d30; /* тёмно-зелёный фон */
+  padding: 60px 20px;
+}
+.questions-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.questions-text h2 {
+  font-size: 28px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+.questions-text p {
+  font-size: 16px;
+  color: #ffffff;
+  line-height: 1.5;
+}
+.questions-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  color: #1f3d30;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background-color .2s;
+}
+.questions-button:hover {
+  background-color: #e0e0e0;
+}
+@media (max-width: 768px) {
+  .questions-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+}

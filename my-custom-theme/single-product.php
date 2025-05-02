@@ -4,6 +4,13 @@
  * Шаблон страницы товара
  * @package my-custom-theme
  */
+add_action( 'wp', function(){
+  if ( is_singular('product') ) {
+    $id = get_the_ID();
+    $views = (int) get_post_meta( $id, 'views', true );
+    update_post_meta( $id, 'views', ++$views );
+  }
+} );
 
 get_header();
 if ( function_exists( 'mytheme_breadcrumbs' ) ) {
