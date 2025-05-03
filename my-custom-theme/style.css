@@ -727,3 +727,94 @@ ul.products-list {
     gap: 20px;
   }
 }
+/* Контейнер двух колонок */
+.checkout-content {
+  display: flex;
+  gap: 40px;
+  margin: 40px 0;
+  flex-wrap: wrap;
+}
+
+/* Левая колонка (поля) */
+.checkout-fields {
+  flex: 1 1 60%;
+  background: #fff;
+  padding: 24px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+}
+
+/* Правая колонка (итоги заказа) */
+.order-review {
+  flex: 1 1 35%;
+  background: #fff;
+  padding: 24px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+}
+
+/* Отступы между секциями внутри колонок */
+.checkout-fields .billing-details,
+.checkout-fields .shipping-details {
+  margin-bottom: 32px;
+}
+
+/* Заголовки секций */
+.checkout-fields h3,
+.order-review h3 {
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Обёртка полей (чтобы поля растягивались во всю ширину) */
+.checkout-fields .woocommerce-billing-fields__field-wrapper,
+.checkout-fields .woocommerce-shipping-fields__field-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+/* Если полей мало («Company», «VAT» и т.п.), они займут всю ширину */
+.checkout-fields .form-row-wide,
+.checkout-fields .form-row.address-field {
+  grid-column: 1 / -1;
+}
+
+/* Стили для кнопки “Place order” */
+.order-review .wc-proceed-to-checkout .button,
+.order-review #place_order {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  background-color: #1f3d30;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  transition: background-color .2s;
+}
+.order-review .wc-proceed-to-checkout .button:hover,
+.order-review #place_order:hover {
+  background-color: #163323;
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+  .checkout-content {
+    flex-direction: column;
+  }
+  .checkout-fields,
+  .order-review {
+    flex: 1 1 100%;
+  }
+}
+.account-menu li .menu-count {
+  background: #1f3d30;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 6px;
+  vertical-align: middle;
+}

@@ -197,3 +197,20 @@ function mytheme_assign_random_hot_deals_once() {
  8. Роль user
 ────────────────────────── */
 add_action( 'after_switch_theme', 'mytheme_add_custom_user_role' );
+
+/**
+ * Редирект на логин, если пытаются открыть /checkout/ неавторизованные
+ */
+add_action( 'template_redirect', 'mytheme_require_login_for_checkout' );
+function mytheme_require_login_for_checkout() {
+    if ( function_exists( 'is_checkout' )
+      && is_checkout()
+      && ! is_user_logged_in()
+      && ! is_wc_endpoint_url( 'order-received' )  // чтобы после подтверждения сразу не редиректить
+    ) {
+        // отправляем на страницу логина, после логина вернём на checkout
+        wp_redirect( wp_login_url( wc_get_checkout_url() ) );
+        exit;
+    }
+}
+

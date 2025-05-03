@@ -6,7 +6,8 @@
  */
 
 get_header();
-// Хлебные крошки
+
+// Хлебные крошки (если не на главной)
 if ( function_exists( 'mytheme_breadcrumbs' ) ) {
     mytheme_breadcrumbs();
 }
@@ -16,13 +17,15 @@ if ( function_exists( 'mytheme_breadcrumbs' ) ) {
 
   <!-- HERO-SECTION -->
   <section class="hero">
-    <div class="hero-block hero-left" style="background-image:url('<?php echo get_template_directory_uri(); ?>/assets/images/hero-left.jpg');">
+    <div class="hero-block hero-left"
+         style="background-image:url('<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/hero-left.jpg');">
       <div class="hero-content">
         <h2><?php esc_html_e( 'Не нашли что искали?', 'my-custom-theme' ); ?></h2>
         <p><?php esc_html_e( 'Сделайте запрос на нужное вам оборудование в личном кабинете...', 'my-custom-theme' ); ?></p>
       </div>
     </div>
-    <div class="hero-block hero-right" style="background-image:url('<?php echo get_template_directory_uri(); ?>/assets/images/hero-right.jpg');">
+    <div class="hero-block hero-right"
+         style="background-image:url('<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/hero-right.jpg');">
       <div class="hero-content">
         <h2><?php esc_html_e( 'Есть ненужное оборудование?', 'my-custom-theme' ); ?></h2>
         <p><?php esc_html_e( 'Мы всегда ищем б/у оборудование. Отправьте нам список...', 'my-custom-theme' ); ?></p>
@@ -32,11 +35,16 @@ if ( function_exists( 'mytheme_breadcrumbs' ) ) {
 
   <!-- HOT DEALS -->
   <?php
-  $hot_deals = new WP_Query([
+  $hot_deals = new WP_Query( array(
     'post_type'      => 'product',
     'posts_per_page' => 8,
-    'meta_query'     => [[ 'key'=>'hot_deal', 'value'=>'1' ]],
-  ]);
+    'meta_query'     => array(
+      array(
+        'key'   => 'hot_deal',
+        'value' => '1',
+      ),
+    ),
+  ) );
   if ( $hot_deals->have_posts() ) : ?>
     <section class="carousel-section hot-deals">
       <div class="container">
@@ -62,12 +70,12 @@ if ( function_exists( 'mytheme_breadcrumbs' ) ) {
 
   <!-- NEW IN -->
   <?php
-  $new_in = new WP_Query([
+  $new_in = new WP_Query( array(
     'post_type'      => 'product',
     'posts_per_page' => 8,
     'orderby'        => 'date',
     'order'          => 'DESC',
-  ]);
+  ) );
   if ( $new_in->have_posts() ) : ?>
     <section class="carousel-section new-in">
       <div class="container">
@@ -93,13 +101,13 @@ if ( function_exists( 'mytheme_breadcrumbs' ) ) {
 
   <!-- MOST VIEWED -->
   <?php
-  $most_viewed = new WP_Query([
+  $most_viewed = new WP_Query( array(
     'post_type'      => 'product',
     'posts_per_page' => 8,
     'meta_key'       => 'views',
     'orderby'        => 'meta_value_num',
     'order'          => 'DESC',
-  ]);
+  ) );
   if ( $most_viewed->have_posts() ) : ?>
     <section class="carousel-section most-viewed">
       <div class="container">
@@ -123,19 +131,18 @@ if ( function_exists( 'mytheme_breadcrumbs' ) ) {
     </section>
   <?php endif; ?>
 
-  <!-- Остались вопросы? -->
-<section class="questions">
-  <div class="questions-inner">
-    <div class="questions-text">
-      <h2><?php esc_html_e( 'Остались вопросы', 'my-custom-theme' ); ?></h2>
-      <p><?php esc_html_e( 'Заполните форму обратной связи с интересующими вас вопросами и мы свяжемся с вами удобным для вас способом', 'my-custom-theme' ); ?></p>
+  <!-- ОСТАЛИСЬ ВОПРОСЫ? -->
+  <section class="questions">
+    <div class="questions-inner">
+      <div class="questions-text">
+        <h2><?php esc_html_e( 'Остались вопросы', 'my-custom-theme' ); ?></h2>
+        <p><?php esc_html_e( 'Заполните форму обратной связи с интересующими вас вопросами и мы свяжемся с вами удобным для вас способом', 'my-custom-theme' ); ?></p>
+      </div>
+      <div class="questions-action">
+        <a href="#contact" class="questions-button"><?php esc_html_e( 'Напишите нам', 'my-custom-theme' ); ?></a>
+      </div>
     </div>
-    <div class="questions-action">
-      <a href="#contact" class="questions-button"><?php esc_html_e( 'Напишите нам', 'my-custom-theme' ); ?></a>
-    </div>
-  </div>
-</section>
-
+  </section>
 
   <!-- PRODUCT BRAND -->
   <section class="brands-carousel">
@@ -162,8 +169,7 @@ if ( function_exists( 'mytheme_breadcrumbs' ) ) {
     </div>
   </section>
 
-</div> <!-- .front-page-wrapper -->
+</div><!-- .front-page-wrapper -->
 
 <?php
 get_footer();
-?>
