@@ -8,19 +8,26 @@
 get_header();
 mytheme_breadcrumbs();
 
-// Определяем активный раздел из GET, по умолчанию — dashboard
-$section = isset( $_GET['section'] ) ? sanitize_key( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+// ID и URL страницы аккаунта
+$account_page_id  = get_queried_object_id();
+$account_page_url = get_permalink( $account_page_id );
 
-// Формируем меню ЛК
+// Определяем активный раздел
+$section = isset( $_GET['section'] )
+  ? sanitize_key( wp_unslash( $_GET['section'] ) )
+  : 'dashboard';
+
+// Меню ЛК
 $menu = [
-  'dashboard'      => ['dashboard.svg', 'Основная информация'],
-  'profile'        => ['profile.svg',   'Личная информация'],
-  'payment-method'=> ['payment.svg',    'Платёжные реквизиты'],
-  'cart'           => ['cart.svg',       'Корзина'],
-  'orders'         => ['orders.svg',     'Заказы'],
-  'favorites'      => ['heart.svg',      'Избранное'],
+  'dashboard' => ['dashboard.svg', 'Основная информация'],
+  'profile'   => ['profile.svg',   'Личная информация'],
+  'payment'   => ['payment.svg',   'Платёжные реквизиты'],
+  'cart'      => ['cart.svg',      'Корзина'],
+  'orders'    => ['orders.svg',    'Заказы'],
+  'ads'       => ['ads.svg',       'Объявления'],
+  'favorites' => ['heart.svg',     'Избранное'],
+  'logout'    => ['logout.svg',    'Выйти'],    // ← добавили пункт «Выйти»
 ];
-
 ?>
 <div class="page-wrapper account-wrapper">
   <aside class="account-sidebar">
@@ -28,114 +35,173 @@ $menu = [
     <nav class="account-menu">
       <ul>
         <?php foreach ( $menu as $slug => $item ) :
-          // Для «orders» добавляем счётчик
           $count_html = '';
+          $url        = '';
+
+          // Счётчик для Заказы
           if ( 'orders' === $slug && is_user_logged_in() ) {
             $cnt = wc_get_customer_order_count( get_current_user_id() );
             $count_html = '<span class="menu-count">' . intval( $cnt ) . '</span>';
+            $url = add_query_arg( 'section', 'orders', $account_page_url );
+
+          // Счётчик для Объявления
+          } elseif ( 'ads' === $slug && is_user_logged_in() ) {
+            $ads_q = new WP_Query([
+              'post_type'      => 'product',
+              'author'         => get_current_user_id(),
+              'post_status'    => ['publish','pending','draft'],
+              'posts_per_page' => 1,
+              'fields'         => 'ids',
+            ]);
+            $count_html = '<span class="menu-count">' . intval( $ads_q->found_posts ) . '</span>';
+            $url = add_query_arg( 'section', 'ads', $account_page_url );
+
+          // Пункт «Выйти»
+          } elseif ( 'logout' === $slug ) {
+            $url = wp_logout_url( $account_page_url );
+
+          // Все остальные пункты
+          } else {
+            $url = add_query_arg( 'section', $slug, $account_page_url );
           }
-          $active_class = $slug === $section ? 'is-active' : '';
-          $url = esc_url( add_query_arg( 'section', $slug, get_permalink() ) );
-        ?>
-        <li class="<?php echo $active_class; ?>">
-          <a href="<?php echo $url; ?>">
-            <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/icons/' . $item[0] ); ?>" alt="">
-            <?php echo esc_html( $item[1] ); ?><?php echo $count_html; ?>
-          </a>
-        </li>
-        <?php endforeach; ?>
+
+          printf(
+            '<li class="%1$s"><a href="%2$s"><img src="%3$s/assets/icons/%4$s" alt=""><span>%5$s</span>%6$s</a></li>',
+            ( $slug === $section ) ? 'is-active' : '',
+            esc_url( $url ),
+            esc_url( get_template_directory_uri() ),
+            esc_attr( $item[0] ),
+            esc_html( $item[1] ),
+            $count_html
+          );
+        endforeach; ?>
       </ul>
     </nav>
   </aside>
 
   <main class="account-content">
-
     <?php
     switch ( $section ) :
 
-      // 1) Основная информация (Dashboard)
       case 'dashboard':
-        // Подключаем оригинальный файл из репозитория:
         get_template_part( 'inc/dashboard/dashboard-content' );
         break;
 
-      // 2) Личная информация
       case 'profile':
         get_template_part( 'inc/dashboard/profile' );
         break;
 
-      // 3) Платёжные реквизиты
-      case 'payment-method':
+      case 'payment':
         get_template_part( 'inc/dashboard/payment-methods' );
         break;
 
-      // 4) Корзина
       case 'cart':
-        // Если корзина пуста, можно редирект на /cart/ или вывести кол-во
-        echo '<p>' . esc_html__( 'Ваша корзина', 'my-custom-theme' ) . '</p>';
+        echo '<h2>' . esc_html__( 'Ваша корзина', 'my-custom-theme' ) . '</h2>';
         echo do_shortcode( '[woocommerce_cart]' );
         break;
 
-      // 5) Заказы
       case 'orders':
-
         if ( ! is_user_logged_in() ) {
           echo '<p>' . esc_html__( 'Пожалуйста, авторизуйтесь для просмотра заказов.', 'my-custom-theme' ) . '</p>';
           break;
         }
-
-        // Конкретный заказ?
         if ( ! empty( $_GET['order_id'] ) ) {
-          $order_id = intval( $_GET['order_id'] );
-          $order    = wc_get_order( $order_id );
+          $order = wc_get_order( intval( $_GET['order_id'] ) );
           if ( $order && $order->get_user_id() === get_current_user_id() ) {
-            // Смотрим детали заказа
             wc_get_template( 'checkout/thankyou.php', [ 'order' => $order ] );
           } else {
             echo '<p>' . esc_html__( 'Заказ не найден.', 'my-custom-theme' ) . '</p>';
           }
         } else {
-          // Список заказов
           $paged  = max( 1, get_query_var( 'paged', 1 ) );
-          $per    = 10;
-          $orders = wc_get_orders( [
+          $orders = wc_get_orders([
             'customer_id' => get_current_user_id(),
-            'limit'       => $per,
+            'limit'       => 10,
             'page'        => $paged,
             'paginate'    => true,
             'orderby'     => 'date',
             'order'       => 'DESC',
-          ] );
-
+          ]);
+          echo '<h2>' . esc_html__( 'Мои заказы', 'my-custom-theme' ) . '</h2>';
           if ( $orders->orders ) {
             echo '<ul class="orders-list">';
             foreach ( $orders->orders as $o ) {
-              $link = esc_url( add_query_arg( [
-                'section'  => 'orders',
-                'order_id' => $o->get_id(),
-              ], get_permalink() ) );
+              $link = esc_url( add_query_arg([
+                'section'=>'orders',
+                'order_id'=> $o->get_id(),
+              ], $account_page_url ) );
               printf(
-                '<li class="order-item"><a href="%1$s">%2$s #%3$s &mdash; %4$s</a></li>',
+                '<li><a href="%1$s">%2$s #%3$s — %4$s</a></li>',
                 $link,
                 esc_html__( 'Заказ', 'my-custom-theme' ),
                 esc_html( $o->get_order_number() ),
-                wp_kses_post( wc_price( $o->get_total() ) )
+                wc_price( $o->get_total() )
               );
             }
             echo '</ul>';
-            // Пагинация
-            echo paginate_links( [
+            echo paginate_links([
               'current' => $paged,
               'total'   => $orders->max_num_pages,
               'format'  => '?section=orders&paged=%#%',
-            ] );
+            ]);
           } else {
             echo '<p>' . esc_html__( 'У вас ещё нет заказов.', 'my-custom-theme' ) . '</p>';
           }
         }
         break;
 
-      // 6) Избранное
+      case 'ads':
+        if ( ! is_user_logged_in() ) {
+          echo '<p>' . esc_html__( 'Авторизуйтесь, чтобы управлять объявлениями.', 'my-custom-theme' ) . '</p>';
+          break;
+        }
+        // обработка new/edit handled in template part...
+        $action = sanitize_text_field( wp_unslash( $_GET['action'] ?? '' ) );
+        if ( in_array( $action, [ 'new', 'edit' ], true ) ) {
+          set_query_var( 'account_page_url', $account_page_url );
+          get_template_part( 'inc/dashboard/ad-editor' );
+          break;
+        }
+        echo '<p><a class="button" href="'
+             . esc_url( add_query_arg( [ 'section'=>'ads','action'=>'new' ], $account_page_url ) )
+             . '">'
+             . esc_html__( 'Новое объявление', 'my-custom-theme' )
+             . '</a></p>';
+        $paged = max( 1, get_query_var( 'paged', 1 ) );
+        $ads_q = new WP_Query([
+          'post_type'      => 'product',
+          'author'         => get_current_user_id(),
+          'post_status'    => ['publish','pending','draft'],
+          'posts_per_page' => 10,
+          'paged'          => $paged,
+        ]);
+        echo '<h2>' . esc_html__( 'Мои объявления', 'my-custom-theme' ) . '</h2>';
+        if ( $ads_q->have_posts() ) {
+          echo '<ul class="ads-list">';
+          while ( $ads_q->have_posts() ) : $ads_q->the_post();
+            $status = get_post_status_object( get_post_status() )->label;
+            $edit_link = esc_url( add_query_arg([
+              'section'=>'ads','action'=>'edit','ad_id'=>get_the_ID(),
+            ], $account_page_url ) );
+            printf(
+              '<li><a href="%1$s">%2$s</a> — %3$s</li>',
+              $edit_link,
+              esc_html( get_the_title() ),
+              esc_html( $status )
+            );
+          endwhile;
+          echo '</ul>';
+          echo paginate_links([
+            'current' => $paged,
+            'total'   => $ads_q->max_num_pages,
+            'format'  => '?section=ads&paged=%#%',
+          ]);
+          wp_reset_postdata();
+        } else {
+          echo '<p>' . esc_html__( 'У вас пока нет объявлений.', 'my-custom-theme' ) . '</p>';
+        }
+        break;
+
       case 'favorites':
         get_template_part( 'inc/dashboard/favorites' );
         break;
@@ -146,8 +212,6 @@ $menu = [
 
     endswitch;
     ?>
-
   </main>
 </div>
-
 <?php get_footer(); ?>
